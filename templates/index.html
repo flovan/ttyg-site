@@ -1,0 +1,250 @@
+{{> layout/header}}
+
+<main>
+	<header>
+		<h1>TTYG &mdash; Talk To Your Grid <span class="version">v0.1.0</span></h1>
+		<p>TTYG is an attempt at creating a smart SCSS grid mixin that understands human language, while at the same time outputting DRY code. For optimal results, this mixin should be used in combination with CSS3 level selectors, as well as a <a href="https://www.npmjs.com/package/clean-css">CSS minifier</a> and/or <a href="https://www.npmjs.com/package/group-css-media-queries">mixin merger</a>.</p>
+		<p>Columns are on-demand, and no CSS is rendered until you ask for it through an <code>@include</code> command. It is also possible to make ready-to-use classes available if that&#39;s what floats your boat.</p>
+		<p>Demos:</p>
+		<nav>
+			<ul>
+				<li><a href="#regular">Basic usage</a></li>
+				<li><a href="#offset">Offset</a></li>
+				<li><a href="#centering">Centering</a></li>
+				<li><a href="#no-break">Non-breaking</a></li>
+				<li><a href="#push-pull">Push &amp; Pull</a></li>
+				<li><a href="#context">Context</a></li>
+				<li><a href="#reassembly-point-and-range">Reassembly Point and Range</a></li>
+				<li><a href="#layout-chaining">Layout Chaining</a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+				<li><a href=""></a></li>
+			</ul>
+		</nav>
+		<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+	</header>
+	<article id="configuration">
+		<h1>Project configuration</h1>
+		<p>If you want to configure TTYG on a per-project basis, you can call the following mixin and pass in your settings:</p>
+		<pre><code>@include ttyg-config(
+   context: 12,
+   gutter: 5%,
+   breakpoint: 650px,
+   grid-width: 1140px,
+   page-padding: 4%,
+   font-size: 16px
+);</code></pre>
+		<p>The settings above are the defaults, and settings are used throughout useage of the mixin, usually as fallback if no specific values are used.</p>
+	</article>
+	<article>
+		<h1>Demos</h1>
+		<div class="report is-info"><strong>Note:</strong>
+			<ul>
+				<li>Vertical spacing below was added for aesthetic reasons.</li>
+				<li>All demos that include a reassembly point or range require manual resizing.</li>
+				<li></li>
+			</ul>
+		</div>
+		<section class="demo demo-1" id="regular">
+			<h2>Basic usage</h2>
+			<p>Standard, auto-collapsing columns. Usage of <code>edge</code> signifies a column that ends a row.</p>
+			<pre><code>@include col([number]);</code></pre>
+			<div class="demo-wrapper">
+				<div>12</div>
+				<div>6</div>
+				<div>6</div>
+				<div>4</div>
+				<div>4</div>
+				<div>4</div>
+				<div>3</div>
+				<div>3</div>
+				<div>3</div>
+				<div>3</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+			</div>
+		</section>
+		<section class="demo demo-2" id="offset">
+			<h2>Offset</h2>
+			<p>Usage of <code>offset</code> (followed by an amount of columns) will push columns to the left.</p>
+			<pre><code>@include col([number] offset [number]);</code></pre>
+			<div class="demo-wrapper">
+				<div>3</div>
+				<div>3 offset 6</div>
+				<div>2 offset 1</div>
+				<div>2 offset 4</div>
+				<div>2 offset 1</div>
+			</div>
+		</section>
+		<section class="demo demo-3" id="centering">
+			<h2>Centering</h2>
+			<p>Good ol&#39; <code>margin: 0 auto;</code> centering.</p>
+			<pre><code>@include col([number] centered);</code></pre>
+			<div class="demo-wrapper">
+				<div>4 centered</div>
+				<div>8 centered</div>
+			</div>
+		</section>
+		<section class="demo demo-4" id="no-break">
+			<h2>Non-breaking</h2>
+			<p>Usage of <code>no-break</code> will not add any <code>min-width</code> media queries and thus columns will persist on smaller screens.</p>
+			<pre><code>@include col([number] no-break);</code></pre>
+			<div class="demo-wrapper">
+				<div>6 no-break</div>
+				<div>6 no-break</div>
+				<div>4</div>
+				<div>4</div>
+				<div>4</div>
+			</div>
+		</section>
+		<section class="demo demo-5" id="push-pull">
+			<h2>Push &amp; Pull</h2>
+			<p>Through usage of <code>push</code> and <code>pull</code> (followed by an amount of columns), column order can be flipped visually.</p>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+				<div>6 push 6<br><em>First in DOM</em></div>
+				<div>6 pull 6<br><em>Last in DOM</em></div>
+				<div>3<br><em>First in DOM</em></div>
+				<div>3 push 6<br><em>Middle in DOM</em></div>
+				<div>6 pull 3<br><em>Last in DOM</em></div>
+				<div>4 push 8<br><em>First in DOM</em></div>
+				<div>4<br><em>Middle in DOM</em></div>
+				<div>4 pull 8<br><em>Last in DOM</em></div>
+			</div>
+		</section>
+		<section class="demo demo-6">
+			<h2>Context</h2>
+			<p>By using <code>of</code>, a different context can be used for calculating column widths.</p>
+			<pre><code>@include col([number] of [number]);</code></pre>
+			<div class="demo-wrapper">
+				<div>3 of 5</div>
+				<div>2 of 5</div>
+			</div>
+		</section>
+		<section class="demo demo-7" id="reassembly-point-and-range">
+			<h2>Reassembly Point and Range</h2>
+			<p>Start or end a layout on a specific point or assign it to a range by using <code>from</code> and <code>to</code> followed by a pixel value.<br>
+				The latter one of the includes below would use the <a href="#configuration">config breakpoint</a> as <code>from</code> value.</p>
+
+			<pre><code>@include col([number] from [pixel value];
+@include col([number] from [pixel value] to [pixel value]);
+@include col([number] to [pixel value]);</code></pre>
+			<div class="demo-wrapper">
+					<div>6<br><em>Default: from 650px</em></div>
+					<div>6 from 500px</div>
+					<div>6 to 800px<br><em>Default: from 650px</em></div>
+					<div>6 from 800px to 1000px</div>
+			</div>
+		</section>
+		<section class="demo demo-8" id="layout-chaining">
+			<h2>Layout Chaining</h2>
+			<p>TTYG&#39;s true strength lies in the ability to chain together behaviours, by using the keyword <code>then</code>.</p>
+			<p class="report is-info"><strong>Note:</strong> The following demo requires resizing.</p>
+			<pre><code>@include col([layout instruction] then [layout instruction] [...]);</code></pre>
+			<div class="demo-wrapper">
+				<div>6 to 800px then 3 to 900px then 4</div>
+				<div>6 to 800px then 3 to 900px then 4</div>
+				<div>6 to 800px then 3 to 900px then 4</div>
+				<div>6 to 800px then 3 to 900px then 4</div>
+				<div>6 to 800px then 3 to 900px then 4</div>
+				<div>6 to 800px then 3 to 900px then 4</div>
+			</div>
+		</section>
+		<section class="demo demo-9">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+				<div style="display: inline-block;width:50%;background-color:red;color:white;">1</div>
+				<div style="display: inline-block;width:50%;background-color:blue;color:white;">1</div>
+			</div>
+		</section>
+		<section class="demo demo-10">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-11">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-12">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-13">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-14">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-15">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-16">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-17">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-18">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-19">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+		<section class="demo demo-20">
+			<h2></h2>
+			<pre><code>@include col();</code></pre>
+			<div class="demo-wrapper">
+			</div>
+		</section>
+	</article>
+</main>
+
+{{> layout/footer}}

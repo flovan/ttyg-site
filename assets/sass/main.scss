@@ -1,0 +1,251 @@
+// General imports ------------------------------------------------------------
+//
+// These imports don't generate CSS, but make defined variables, functions,
+// and mixins available for further usage
+
+@import 'base/config_global';
+@import 'base/config_site';
+@import 'base/state';
+
+// Normalize and document imports ---------------------------------------------
+
+@import 'module/normalize';
+@import 'module/doc';
+
+// Module imports -------------------------------------------------------------
+
+@import 'module/container';
+//@import 'module/font';
+@import 'module/text';
+@import 'module/reporting';
+//@import 'module/form';
+//@import 'module/button';
+
+// Vendor imports -------------------------------------------------------------
+
+//@import 'vendor/somestyles';
+
+// Styles ---------------------------------------------------------------------
+
+main {
+	@extend %container;
+	padding: rem(25) 0;
+}
+
+	header {
+		margin-bottom: rem(40);
+
+		h1 {
+			@include media-max(600) {
+				padding-right: rem(135);
+			}
+		}
+	}
+
+		h1 span {
+			position: relative;
+			top: rem(-9);
+			font-size: em(8);
+			color: $light-green;
+		}
+
+article + article {
+	margin-top: rem(40);
+}
+
+.demo {
+	padding: rem(40) 0;
+
+	&:not(:first-of-type) {
+		border-top: 1px solid #EAEAEA;
+	}
+
+	em {
+		@extend %is-bold;
+		font-size: em(14);
+		color: rgba($black, .5);
+	}
+}
+
+	.demo-wrapper {
+		@include grid(inline-block);
+
+		div {
+			font-family: $font-stack;
+			text-align: center;
+
+			&:not(:last-child) {
+				margin-bottom: rem(20);
+			}
+
+			&:nth-child(odd) {
+				background: $light-green;
+			}
+			&:nth-child(even) {
+				background: tint($light-green, 40);
+			}
+		}
+	}
+
+.demo-1 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(12);
+	}
+
+	&:nth-child(2) {
+		@include col(6);
+	}
+	&:nth-child(3) {
+		@include col(6);
+	}
+
+	&:nth-child(4),
+	&:nth-child(5) {
+		@include col(4);
+	}
+	&:nth-child(6) {
+		@include col(4);
+	}
+
+	&:nth-child(7),
+	&:nth-child(8),
+	&:nth-child(9) {
+		@include col(3);
+	}
+	&:nth-child(10) {
+		@include col(3);
+	}
+
+	&:nth-child(11),
+	&:nth-child(12),
+	&:nth-child(13),
+	&:nth-child(14),
+	&:nth-child(15) {
+		@include col(2);
+	}
+	&:nth-child(16) {
+		@include col(2);
+	}
+
+	&:nth-child(17),
+	&:nth-child(18),
+	&:nth-child(19),
+	&:nth-child(20),
+	&:nth-child(21),
+	&:nth-child(22),
+	&:nth-child(23),
+	&:nth-child(24),
+	&:nth-child(25),
+	&:nth-child(26),
+	&:nth-child(27) {
+		@include col(1);
+	}
+	&:nth-child(28) {
+		@include col(1);
+	}
+}
+
+.demo-2 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(3);
+	}
+	&:nth-child(2) {
+		@include col(3 offset 6);
+	}
+	&:nth-child(3) {
+		@include col(2 offset 1);
+	}
+	&:nth-child(4) {
+		@include col(2 offset 4);
+	}
+	&:nth-child(5) {
+		@include col(2 offset 1);
+	}
+}
+
+.demo-3 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(4 centered);
+	}
+	&:nth-child(2) {
+		@include col(8 centered);
+	}
+}
+
+.demo-4 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(6 no-break);
+	}
+	&:nth-child(2) {
+		@include col(6 no-break);
+	}
+	&:nth-child(3),
+	&:nth-child(4) {
+		@include col(4);
+	}
+	&:nth-child(5) {
+		@include col(4);
+	}
+}
+
+.demo-5 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(6 push 6);
+	}
+	&:nth-child(2) {
+		@include col(6 pull 6);
+	}
+	&:nth-child(3) {
+		@include col(3);
+	}
+	&:nth-child(4) {
+		@include col(3 push 6);
+	}
+	&:nth-child(5) {
+		@include col(6 pull 3);
+	}
+	&:nth-child(6) {
+		@include col(4 push 8);
+	}
+	&:nth-child(7) {
+		@include col(4);
+	}
+	&:nth-child(8) {
+		@include col(4 pull 8);
+	}
+}
+
+.demo-6 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(3 of 5);
+	}
+	&:nth-child(2) {
+		@include col(2 of 5);
+	}
+}
+
+.demo-7 .demo-wrapper div {
+	&:nth-child(1) {
+		@include col(6);
+	}
+	&:nth-child(2) {
+		@include col(6 from 500px);
+	}
+	&:nth-child(3) {
+		@include col(6 to 800px);
+	}
+	&:nth-child(4) {
+		@include col(6 from 800px to 1000px);
+	}
+}
+
+.demo-8 .demo-wrapper div {
+	@include col(6 to 800px then 3 to 900px then 4);
+}
+
+
+// Print ----------------------------------------------------------------------
+//
+// Inline to avoid the request
+
+@import 'module/print';

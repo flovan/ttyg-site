@@ -1,0 +1,99 @@
+// Selection color ------------------------------------------------------------
+
+::-moz-selection {
+    background: shade($white, 10);
+    text-shadow: none;
+}
+
+::selection {
+    background: $black;
+    text-shadow: none;
+}
+
+// General normalizing --------------------------------------------------------
+//
+// Headings, paragraphs and lists are provided with a lessened line-height,
+// and push down content below them by 1em. Also provided, but commented out,
+// is a rem based solution based on the $base-font-size
+//
+// Note: .report is also included here
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+.report {
+	//@include rem(margin, 0, 0, strip($base-font-size)*1.5);
+	margin: 0 0 1em 0;
+
+	&:last-of-type:last-child {
+		margin-bottom: 0;
+	}
+}
+
+// Headings -------------------------------------------------------------------
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height: 1.3;
+	color: $green;
+}
+
+// Paragraphs -----------------------------------------------------------------
+
+p {
+	/**/
+}
+
+// Lists ----------------------------------------------------------------------
+
+ul,
+ol {
+	padding: 0 0 0 1.4em;
+}
+
+// Links ----------------------------------------------------------------------
+
+a {
+	color: $green;
+
+	&:hover {
+		color: tint($green, 10);
+	}
+	&:active {
+		text-decoration: none;
+	}
+	&:visited {
+		color: $light-green;
+	}
+}
+
+// Pre and Code ---------------------------------------------------------------
+
+code {
+	padding: rem(3) rem(4);
+	background: #EFEFEF;
+	border-radius: 3px;
+}
+
+pre {
+	padding: rem(15);
+	margin-bottom: 1.5em;
+	background: tint(#BFBFBF, 80);
+	border-left: 4px solid #BFBFBF;
+
+	code {
+		padding: 0;
+		background: none;
+		border-radius: none;
+	}
+}
