@@ -27,13 +27,14 @@
 
 // Styles ---------------------------------------------------------------------
 
-main {
-	@extend %container;
-	padding: rem(25) 0;
-}
+$ttyg: (
+   grid-width: 1044px
+);
+
+/* main {} */
 
 	header {
-		margin-bottom: rem(40);
+		padding: rem(40) 0;
 
 		h1 {
 			@include media-max(600) {
@@ -49,29 +50,57 @@ main {
 			color: $light-green;
 		}
 
-article + article {
-	margin-top: rem(40);
+	.social-wrapper {
+		margin-bottom: 1em;
+	}
+
+		.twitter-share-button,
+		.fb-share-button,
+		.github-star-button {
+			display: inline-block;
+			vertical-align: top;
+			margin: 0;
+		}
+		.fb-share-button {
+			margin-right: rem(10);
+		}
+		.twitter-share-button {
+			width: 90px !important;
+		}
+		.fb-share-button {
+			position: relative;
+			top: rem(-4);
+		}
+
+header + article,
+article + article,
+.demo,
+footer {
+	padding: rem(40) 0;
+}
+
+header + article,
+article + article,
+.demo {
+	border-top: 1px solid #EAEAEA;
 }
 
 .demo {
-	padding: rem(40) 0;
+	border-top-style: dotted;
 
-	&:not(:first-of-type) {
-		border-top: 1px solid #EAEAEA;
-	}
-
-	em {
-		@extend %is-bold;
-		font-size: em(14);
-		color: rgba($black, .5);
+	&:first-of-type {
+		margin-top: rem(40);
 	}
 }
 
 	.demo-wrapper {
-		@include grid(inline-block);
+		@include grid();
+
+		.container + & {
+			margin-top: rem(30);
+		}
 
 		div {
-			font-family: $font-stack;
 			text-align: center;
 
 			&:not(:last-child) {
@@ -84,16 +113,22 @@ article + article {
 			&:nth-child(even) {
 				background: tint($light-green, 40);
 			}
+
+			em {
+				@extend %is-bold;
+				font-size: em(14);
+				color: rgba($black, .5);
+			}
 		}
 	}
 
 .demo-1 .demo-wrapper div {
 	&:nth-child(1) {
-		@include col(12);
+		@include col(12 edge);
 	}
 
 	&:nth-child(2) {
-		@include col(6);
+		@include col(6 edge);
 	}
 	&:nth-child(3) {
 		@include col(6);
@@ -104,7 +139,7 @@ article + article {
 		@include col(4);
 	}
 	&:nth-child(6) {
-		@include col(4);
+		@include col(4 edge);
 	}
 
 	&:nth-child(7),
@@ -113,7 +148,7 @@ article + article {
 		@include col(3);
 	}
 	&:nth-child(10) {
-		@include col(3);
+		@include col(3 edge);
 	}
 
 	&:nth-child(11),
@@ -124,7 +159,7 @@ article + article {
 		@include col(2);
 	}
 	&:nth-child(16) {
-		@include col(2);
+		@include col(2 edge);
 	}
 
 	&:nth-child(17),
@@ -141,7 +176,7 @@ article + article {
 		@include col(1);
 	}
 	&:nth-child(28) {
-		@include col(1);
+		@include col(1 edge);
 	}
 }
 
@@ -150,7 +185,7 @@ article + article {
 		@include col(3);
 	}
 	&:nth-child(2) {
-		@include col(3 offset 6);
+		@include col(3 offset 6 edge);
 	}
 	&:nth-child(3) {
 		@include col(2 offset 1);
@@ -159,7 +194,7 @@ article + article {
 		@include col(2 offset 4);
 	}
 	&:nth-child(5) {
-		@include col(2 offset 1);
+		@include col(2 offset 1 edge);
 	}
 }
 
@@ -174,17 +209,17 @@ article + article {
 
 .demo-4 .demo-wrapper div {
 	&:nth-child(1) {
-		@include col(6 no-break);
+		@include col(6 no-reassemble);
 	}
 	&:nth-child(2) {
-		@include col(6 no-break);
+		@include col(6 no-reassemble edge);
 	}
 	&:nth-child(3),
 	&:nth-child(4) {
 		@include col(4);
 	}
 	&:nth-child(5) {
-		@include col(4);
+		@include col(4 edge);
 	}
 }
 
@@ -193,7 +228,7 @@ article + article {
 		@include col(6 push 6);
 	}
 	&:nth-child(2) {
-		@include col(6 pull 6);
+		@include col(6 pull 6 edge);
 	}
 	&:nth-child(3) {
 		@include col(3);
@@ -202,7 +237,7 @@ article + article {
 		@include col(3 push 6);
 	}
 	&:nth-child(5) {
-		@include col(6 pull 3);
+		@include col(6 pull 3 edge);
 	}
 	&:nth-child(6) {
 		@include col(4 push 8);
@@ -211,7 +246,7 @@ article + article {
 		@include col(4);
 	}
 	&:nth-child(8) {
-		@include col(4 pull 8);
+		@include col(4 pull 8 edge);
 	}
 }
 
@@ -240,9 +275,16 @@ article + article {
 }
 
 .demo-8 .demo-wrapper div {
-	//@include col(6 to 800px then 3 to 900px then 4);
+	@include col(6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4);
 }
 
+footer {
+	background-color: $light-green;
+
+	&, a {
+		color: $dark-green;
+	}
+}
 
 // Print ----------------------------------------------------------------------
 //

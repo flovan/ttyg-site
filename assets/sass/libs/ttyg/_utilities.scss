@@ -18,9 +18,9 @@
  * @return {Number}
  */
 
-@function em ($target, $context: map-get($ttyg-defaults, font-size)) {
-	$context: strip($context);
-	$target: strip($target);
+@function ttyg-em ($target, $context: map-get($ttyg-defaults, font-size)) {
+	$context: ttyg-strip($context);
+	$target: ttyg-strip($target);
 	
 	@return ($target/$context)*1em;
 }
@@ -39,7 +39,7 @@
  * @return {List}
  */
 
-@function l-remove ($list, $value, $recursive: false) {
+@function ttyg-l-remove ($list, $value, $recursive: false) {
 	$result: ();
 
 	@for $i from 1 through length($list) {
@@ -66,7 +66,7 @@
  * @return {List}
  */
 
-@function l-remove-nth($list, $index) {
+@function ttyg-l-remove-nth ($list, $index) {
 	$result: null;
 				
 	@if type-of($index) != number {
@@ -113,7 +113,7 @@
  * @return {List}
  */
 
-@function l-slice($list, $start: 1, $end: length($list)) {
+@function ttyg-l-slice ($list, $start: 1, $end: length($list)) {
 	$result: null;
 							
 	@if type-of($start) != number or type-of($end) != number {
@@ -149,12 +149,12 @@
  * @return {List}
  */
 
-@function l-flatten($list) {
+@function ttyg-l-flatten ($list) {
 	$result: ();
 
 	@each $item in $list {
 		@if length($item) > 1 {
-			$flatten: l-flatten($item);
+			$flatten: ttyg-l-flatten($item);
 			
 			@each $i in $flatten {
 				$result: append($result, $i, list-separator($list));
@@ -181,8 +181,8 @@
  * @return {Number}
  */
 
-@function strip ($number) {
-		@return $number / ($number * 0 + 1);
+@function ttyg-strip ($number) {
+	@return $number / ($number * 0 + 1);
 }
 
 /** 
@@ -198,9 +198,9 @@
  * @return {Number}
  */
 
-@function col-width ($columns, $context: map-get($ttyg-defaults, context)) {
+@function ttyg-col-width ($columns, $context: ttyg-get(context)) {
 	$perc: (100 / $context * $columns) * 1%;
-	@return ($perc - (map-get($ttyg-defaults, gutter) - (map-get($ttyg-defaults, gutter)/($context / $columns))));
+	@return ($perc - (ttyg-get(gutter) - (ttyg-get(gutter)/($context / $columns))));
 }
 
 /** 
@@ -215,7 +215,7 @@
  * @return {Number}
  */
 
-@function reduce-to-number($list) {
+@function ttyg-reduce-to-number ($list) {
 	@while type-of($list) != number {
 		$list: nth($list, 1);
 	}

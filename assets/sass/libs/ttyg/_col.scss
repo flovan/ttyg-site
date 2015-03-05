@@ -12,29 +12,26 @@
 
 @mixin col($instructions) {
 	// Make a copy of the ttyg settings:
-	$g: map-merge((), $ttyg-defaults);
+	$g: map-merge($ttyg-defaults, $ttyg);
 
-	// Prepare a breakpoint holder for later use ("then")
-	$bp: null;
-
-	// Print out the instructions as a comment
-	/* instructions: #{$instructions} */
+	// Prepare a assembly point holder for later use ("then")
+	$ap: null;
 
 	// Print common CSS
 	@extend %ttyg-common;
 
 	// Flatten the instructions
-	$instructions: l-flatten($instructions);
+	$instructions: ttyg-l-flatten($instructions);
 
 	// Get length and type of instructions, and prepare cols
 	$instr-length: length($instructions);
 	$instr-type: type-of($instructions);
 	$cols: map-get($g, context);
 
-	// Check if this column should break or not
-	$isBreak: index($instructions, 'no-break') == null;
-	@if not $isBreak {
-		$instructions: l-remove($instructions, no-break);
+	// Check if this column should reassemble or not
+	$isReassemble: type-of(index($instructions, no-reassemble)) != number;
+	@if not $isReassemble {
+		$instructions: ttyg-l-remove($instructions, no-reassemble);
 		$instr-length: length($instructions);
 		$instr-type: type-of($instructions);
 	}
@@ -42,46 +39,46 @@
 	// Analyse the instructions
 	$ofIndex: index($instructions, of);
 	$ofContext: map-get($ttyg-defaults, context);
-	$hasOf: $ofIndex != null and $ofIndex != false;
+	$hasOf: type-of($ofIndex) == number;
 
 	$fromIndex: index($instructions, from);
-	$hasFrom: $fromIndex != null and $fromIndex != false;
+	$hasFrom: type-of($fromIndex) == number;
 
 	$toIndex: index($instructions, to);
-	$hasTo: $toIndex != null and $toIndex != false;
+	$hasTo: type-of($toIndex) == number;
 
 	$thenIndex: index($instructions, then);
-	$hasThen: $thenIndex != null and $thenIndex != false;
+	$hasThen: type-of($thenIndex) == number;
 
 	$edgeLoc: index($instructions, edge);
-	$isEdge: $edgeLoc != null and $edgeLoc != false;
+	$edgeVal: null;
+	$isEdge: type-of($edgeLoc) == number;
 
 	$centeredLoc: index($instructions, centered);
-	$isCentered: $centeredLoc != null and $centeredLoc != false;
+	$isCentered: type-of($centeredLoc) == number;
 
 	$offsetLoc: index($instructions, offset);
-	$isOffset: $offsetLoc != null and $offsetLoc != false;
+	$offsetAmount: null;
+	$isOffset: type-of($offsetLoc) == number;
+
+	$gutterMultiplier: 0;
 
 	$pushLoc: index($instructions, push);
 	$pushAmount: 0;
-	$isPush: $pushLoc != null and $pushLoc != false;
+	$isPush: type-of($pushLoc) == number;
 
 	$pullLoc: index($instructions, pull);
 	$pullAmount: 0;
-	$isPull: $pullLoc != null and $pullLoc != false;
+	$isPull: type-of($pullLoc) == number;
 
 	// Deal with single or multi-part instructions
 	@if $instr-length == 1 and $instr-type == number {
 		// If this instructions are a number, this is the
 		// number of columns we need
-		$cols: strip($instructions);
+		$cols: ttyg-strip($instructions);
 
 		// Extend classes
-		@if $ttyg-float {
-			@extend %ttyg-f-left;
-		} @else {
-			@extend %ttyg-inline-block;
-		}
+		@extend %ttyg-f-left;
 		@extend %ttyg-margin-r;
 	} @else {
 		// If both "edge" and "centered" are passed in, throw error
@@ -91,20 +88,26 @@
 
 		// Take care of "edge" or "centered" behaviour
 		@if $isEdge {
+			// Check if an edge scenario is passed in
+			@if $edgeLoc + 1 <= $instr-length {
+				$edgeVal: nth($instructions, $edgeLoc + 1);
+				$instructions: ttyg-l-remove-nth($instructions, $edgeLoc + 1);
+
+				// Extend classes
+				@extend %ttyg-f-left;
+				@include ttyg-margin-r();
+			} @else {
+				// Extend classes
+				@extend %ttyg-f-right;
+			}
+
 			// Remove the "edge" keyword from instructions
-			$instructions: l-remove($instructions, edge);
+			$instructions: ttyg-l-remove-nth($instructions, $edgeLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
-
-			// Extend classes
-			@if $ttyg-float {
-				@extend %ttyg-f-right;
-			} @else {
-				@extend %ttyg-inline-block;
-			}
 		} @else if $isCentered {
 			// Remove the "centered" keyword from instructions
-			$instructions: l-remove($instructions, centered);
+			$instructions: ttyg-l-remove-nth($instructions, $centeredLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 
@@ -112,12 +115,8 @@
 			@extend %ttyg-centered;
 		} @else {
 			// Extend classes
-			@if $ttyg-float {
-				@extend %ttyg-f-left;
-			} @else {
-				@extend %ttyg-inline-block;
-			}
-			@extend %ttyg-margin-r;
+			@extend %ttyg-f-left;
+			@include ttyg-margin-r();
 		}
 
 		// Deal with "offset" columns
@@ -127,17 +126,14 @@
 
 			// Convert amount to column based width if no unit is provided
 			@if unit($offsetAmount) == '' {
-				$offsetAmount: col-width($offsetAmount);
+				$offsetAmount: ttyg-col-width($offsetAmount);
 			}
 
 			// Remove the push amount and keyword from the instructions
-			$instructions: l-remove-nth($instructions, $offsetLoc + 1);
-			$instructions: l-remove-nth($instructions, $offsetLoc);
+			$instructions: ttyg-l-remove-nth($instructions, $offsetLoc + 1);
+			$instructions: ttyg-l-remove-nth($instructions, $offsetLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
-
-			// Print some CSS
-			margin-left: $offsetAmount;
 		}
 
 		// Deal with "of" contexts
@@ -157,8 +153,8 @@
 			}
 
 			// Remove the push amount and keyword from the instructions
-			$instructions: l-remove-nth($instructions, $ofLoc + 1);
-			$instructions: l-remove-nth($instructions, $ofLoc);
+			$instructions: ttyg-l-remove-nth($instructions, $ofLoc + 1);
+			$instructions: ttyg-l-remove-nth($instructions, $ofLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 
@@ -177,8 +173,8 @@
 			$pushAmount: nth($instructions, $pushLoc + 1);
 
 			// Remove the push amount and keyword from the instructions
-			$instructions: l-remove-nth($instructions, $pushLoc + 1);
-			$instructions: l-remove-nth($instructions, $pushLoc);
+			$instructions: ttyg-l-remove-nth($instructions, $pushLoc + 1);
+			$instructions: ttyg-l-remove-nth($instructions, $pushLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 
@@ -193,8 +189,8 @@
 			$pullAmount: nth($instructions, $pullLoc + 1);
 
 			// Remove the push amount and keyword from the instructions
-			$instructions: l-remove-nth($instructions, $pullLoc + 1);
-			$instructions: l-remove-nth($instructions, $pullLoc);
+			$instructions: ttyg-l-remove-nth($instructions, $pullLoc + 1);
+			$instructions: ttyg-l-remove-nth($instructions, $pullLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 
@@ -204,46 +200,46 @@
 
 		// Deal with "from" widths
 		@if $hasFrom {
-			// Find out what the asked breakpoint is
+			// Find out what the asked reassembly point is
 			$fromLoc: index($instructions, from);
-			$fromBreak: nth($instructions, $fromLoc + 1);
+			$fromRAP: nth($instructions, $fromLoc + 1);
 
 			// Validate the base and context
-			@if type-of($fromBreak) != number or unit($fromBreak) != px {
-				@error 'The "from" keyword requires a numerical pixel breakpoint. Given was "#{$fromBreak}".';
+			@if type-of($fromRAP) != number or unit($fromRAP) != px {
+				@error 'The "from" keyword requires a numerical pixel reassembly point. Given was "#{$fromRAP}".';
 			}
 
 			// Remove the push amount and keyword from the instructions
-			$instructions: l-remove-nth($instructions, $fromLoc + 1);
-			$instructions: l-remove-nth($instructions, $fromLoc);
+			$instructions: ttyg-l-remove-nth($instructions, $fromLoc + 1);
+			$instructions: ttyg-l-remove-nth($instructions, $fromLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 
-			$g: map-merge($g, (breakpoint: $fromBreak));
+			$g: map-merge($g, (reassembly: $fromRAP));
 		}
 
 		// Deal with "to" widths
 		@if $hasTo {
-			// Find out what the asked maximum breakpoint is
+			// Find out what the asked maximum reassembly point is
 			$toLoc: index($instructions, to);
-			$toBreak: nth($instructions, $toLoc + 1);
+			$toRAP: nth($instructions, $toLoc + 1);
 
 			// Validate the base and context
-			@if type-of($toBreak) != number or unit($toBreak) != px {
-				@error 'The "to" keyword requires a numerical pixel breakpoint. Given was "#{$toBreak}".';
+			@if type-of($toRAP) != number or unit($toRAP) != px {
+				@error 'The "to" keyword requires a numerical pixel reassembly point. Given was "#{$toRAP}".';
 			}
 
 			// Remove the push amount and keyword from the instructions
 			@if $hasThen {
-				$bp: $toBreak;
+				$ap: $toRAP;
 			}
 
-			$instructions: l-remove-nth($instructions, $toLoc + 1);
-			$instructions: l-remove-nth($instructions, $toLoc);
+			$instructions: ttyg-l-remove-nth($instructions, $toLoc + 1);
+			$instructions: ttyg-l-remove-nth($instructions, $toLoc);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 
-			$g: map-merge($g, (max: $toBreak));
+			$g: map-merge($g, (max: $toRAP));
 		}
 
 		// Deal with "then" widths
@@ -253,17 +249,18 @@
 			$includeInstruction: null;
 
 			// Add a "from" instruction for the next mixin call
-			@if $bp != null {
-				$includeInstruction: (l-slice($instructions, $thenLoc + 1, $thenLoc + 1), from, $bp, l-slice($instructions, $thenLoc + 2));
+			@if $ap != null {
+				$includeInstruction: (ttyg-l-slice($instructions, $thenLoc + 1, $thenLoc + 1), from, $ap, ttyg-l-slice($instructions, $thenLoc + 2));
 			} @else {
-				$includeInstruction: (l-slice($instructions, $thenLoc + 1, $thenLoc + 1), from, map-get($g, breakpoint), l-slice($instructions, $thenLoc + 2));
+				$includeInstruction: (ttyg-l-slice($instructions, $thenLoc + 1, $thenLoc + 1), from, map-get($g, reassembly), ttyg-l-slice($instructions, $thenLoc + 2));
 			}
 
 			// Run the mixin again with everything after "then"
-			@include col($includeInstruction);
+			$test: ttyg-l-flatten($includeInstruction);
+			@include col(ttyg-l-flatten($includeInstruction));
 
 			// Remove keyword from the instructions
-			$instructions: l-slice($instructions, 1, $thenLoc - 1);
+			$instructions: ttyg-l-slice($instructions, 1, $thenLoc - 1);
 			$instr-length: length($instructions);
 			$instr-type: type-of($instructions);
 		}
@@ -271,14 +268,14 @@
 		// If the instructions now equals a number, this is
 		// the number of columns we need
 		@if $instr-length != 1 or $instr-type != number {
-			$instructions: reduce-to-number($instructions);
+			$instructions: ttyg-reduce-to-number($instructions);
 		}
 	}
 
 	// Get the number of columns;
-	$cols: strip($instructions);
+	$cols: ttyg-strip($instructions);
 
-	// Deal with "push" columns
+	// Take care of span type columns (they will have too much margin)
 	@if $isPush {
 		// Find the gutter multiplier
 		$gutterMultiplier: ceil($ofContext/$pushAmount - 1);
@@ -287,12 +284,7 @@
 		@if $ofContext/$cols < $gutterMultiplier {
 			$gutterMultiplier: $gutterMultiplier - $ofContext/$cols;
 		}
-
-		// Print some CSS
-		left: ($gutterMultiplier * map-get($ttyg-defaults, gutter)) + col-width($pushAmount);
 	}
-
-	// Deal with "pull" columns
 	@if $isPull {
 		// Find the gutter multiplier
 		$gutterMultiplier: ceil($ofContext/$pullAmount - 1);
@@ -301,22 +293,80 @@
 		@if $ofContext/$cols < $gutterMultiplier {
 			$gutterMultiplier: $gutterMultiplier - $ofContext/$cols;
 		}
-
-		right: ($gutterMultiplier * map-get($ttyg-defaults, gutter)) + col-width($pullAmount);
 	}
 
-	// Check if we're dealing with breakpoints
-	@if $isBreak {
+	// Check if we're dealing with reassembly points
+	@if $isReassemble {
 		@if map-has-key($g, max) {
-			@media screen and (min-width: em(map-get($g, breakpoint))) and (max-width: em(map-get($g, max))) {
-				width: col-width($cols, map-get($g, context));
+			// Output min-max media query
+			@media screen and (min-width: ttyg-em(map-get($g, reassembly))) and (max-width: ttyg-em(map-get($g, max))) {
+				// Set the width
+				width: ttyg-col-width($cols, map-get($g, context));
+				
+				// Check if this is an edge element
+				@if type-of($edgeVal) == number {
+					&:nth-child(#{$edgeVal}n) {
+						float: right;
+						margin-right: 0;
+					}
+				}
+				
+				// Output the push or pull
+				@if $isPush {
+					left: ($gutterMultiplier * ttyg-get(gutter)) + ttyg-col-width($pushAmount);
+				}
+				@if $isPull {
+					right: ($gutterMultiplier * ttyg-get(gutter)) + ttyg-col-width($pullAmount);
+				}
+				
+				// Output offset
+				@if $isOffset {
+					margin-left: $offsetAmount;
+				}
 			}
 		} @else {
-			@media screen and (min-width: em(map-get($g, breakpoint))) {
-				width: col-width($cols, map-get($g, context));
+			// Output min media query
+			@media screen and (min-width: ttyg-em(map-get($g, reassembly))) {
+				// Set the width
+				width: ttyg-col-width($cols, map-get($g, context));
+
+				// Check if this is an edge element
+				@if type-of($edgeVal) == number {
+					&:nth-child(#{$edgeVal}n) {
+						float: right;
+						margin-right: 0;
+					}
+				}
+
+				// Output the push or pull
+				@if $isPush {
+					left: ($gutterMultiplier * ttyg-get(gutter)) + ttyg-col-width($pushAmount);
+				}
+				@if $isPull {
+					right: ($gutterMultiplier * ttyg-get(gutter)) + ttyg-col-width($pullAmount);
+				}
+				
+				// Output offset
+				@if $isOffset {
+					margin-left: $offsetAmount;
+				}
 			}
 		}
 	} @else {
-		width: col-width($cols, map-get($g, context));
+		// Set static width
+		width: ttyg-col-width($cols, map-get($g, context));
+
+		// Output the push or pull
+		@if $isPush {
+			left: ($gutterMultiplier * ttyg-get(gutter)) + ttyg-col-width($pushAmount);
+		}
+		@if $isPull {
+			right: ($gutterMultiplier * ttyg-get(gutter)) + ttyg-col-width($pullAmount);
+		}
+				
+		// Output offset
+		@if $isOffset {
+			margin-left: $offsetAmount;
+		}
 	}
 }
