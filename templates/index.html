@@ -40,16 +40,36 @@
 		</ul>
 		<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 	</header>
+	<article id="usage">
+		<div class="container">
+			<h1>Usage</h1>
+			<p>To start using TTYG, include the contents of the <code>sass</code> folder somewhere in your project and import the base file.</p>
+			<pre><code>@import 'ttyg';</code></pre>
+		</div>
+	</article>
 	<article id="configuration">
 		<div class="container">
-			<h1>Project configuration</h1>
-			<p>Configure TTYG by defining the settings map <code>$ttyg</code>:</p>
+			<h1>Configuration</h1>
+			<p>Configure TTYG by defining the settings map <code>$ttyg</code>, preferably somewhere at the top of your main stylesheet (or before the first usage of TTYG).</p>
 			<pre><code>$ttyg(
+  // Default context to use for column widths
   context: 12,
+
+  // Default gutter spacing between columns
+  // Set this to 0% for a no-gap layout
   gutter: 5%,
+
+  // Default minimum reassembly point
   reassembly: 650px,
+
+  // Default minimum width of a grid container
   grid-width: 1140px,
-  page-padding: 4%
+
+  // Default minimum padding on a page (when below grid-width)
+  page-padding: 4%,
+
+  // Font-size used to calculate em-based media-queries
+  font-size: 16px
 );</code></pre>
 			<p>The keys listed above are all of the available settings and their default values.</p>
 		</div>
