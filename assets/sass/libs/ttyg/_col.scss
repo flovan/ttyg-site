@@ -77,7 +77,11 @@
 		$cols: strip($instructions);
 
 		// Extend classes
-		@extend %ttyg-f-left;
+		@if $ttyg-float {
+			@extend %ttyg-f-left;
+		} @else {
+			@extend %ttyg-inline-block;
+		}
 		@extend %ttyg-margin-r;
 	} @else {
 		// If both "edge" and "centered" are passed in, throw error
@@ -93,7 +97,11 @@
 			$instr-type: type-of($instructions);
 
 			// Extend classes
-			@extend %ttyg-f-right;
+			@if $ttyg-float {
+				@extend %ttyg-f-right;
+			} @else {
+				@extend %ttyg-inline-block;
+			}
 		} @else if $isCentered {
 			// Remove the "centered" keyword from instructions
 			$instructions: l-remove($instructions, centered);
@@ -104,7 +112,11 @@
 			@extend %ttyg-centered;
 		} @else {
 			// Extend classes
-			@extend %ttyg-f-left;
+			@if $ttyg-float {
+				@extend %ttyg-f-left;
+			} @else {
+				@extend %ttyg-inline-block;
+			}
 			@extend %ttyg-margin-r;
 		}
 

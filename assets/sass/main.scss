@@ -240,7 +240,7 @@ article + article {
 }
 
 .demo-8 .demo-wrapper div {
-	@include col(6 to 800px then 3 to 900px then 4);
+	//@include col(6 to 800px then 3 to 900px then 4);
 }
 
 

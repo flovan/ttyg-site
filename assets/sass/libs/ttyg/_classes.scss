@@ -12,6 +12,10 @@
   vertical-align: top;
 }
 
+%ttyg-inline-block {
+  display: inline-block;
+}
+
 %ttyg-f-left {
   float: left;
 }
@@ -21,7 +25,7 @@
 }
 
 %ttyg-margin-r {
-  margin-right: map-get($ttyg-defaults, gutter);
+  padding-left: map-get($ttyg-defaults, gutter);
 }
 
 %ttyg-centered {
@@ -44,14 +48,11 @@
 
 $noWidthFontIncluded: false;
 @mixin grid ($type) {
-    @if type == inline-block and $noWidthFontIncluded == false {
-        @extend %ttyg-is-zero-spaced;
-        @warn $ttyg-type;
-        
-        $ttyg-type: inline-block !global;
+    // If inline-block behaviour is requested, change the global flag (once)
+    @if $type == inline-block and $noWidthFontIncluded == false {
+        @extend %ttyg-is-zero-spaced; 
+        $ttyg-float: false !global;
         $noWidthFontIncluded: true !global;
-
-        @warn $ttyg-type;
     }
 }
 
