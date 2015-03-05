@@ -1,0 +1,236 @@
+{{> layout/header}}
+
+<main>
+	<header class="container">
+		<h1>TTYG &mdash; Talk To Your Grid <span class="version">v0.1.0</span></h1>
+		<div class="social-wrapper">
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.flovan.me/ttyg" data-text="TTYG, a smart SCSS grid mixin that understands human language" data-via="prplps">Tweet</a>
+
+			<div class="fb-share-button" data-href="http://www.flovan.me/ttyg" data-type="button_count"></div>
+
+			<iframe class="github-star-button" src="" allowtransparency="true" frameborder="0" scrolling="0" width="89" height="20"></iframe>
+		</div>
+		<p>TTYG is an attempt at creating a smart SCSS grid mixin that understands human language.</p>
+		<p>Columns are on-demand, so no CSS is compiled until you ask for it through an <code>@include</code> command. Output is made DRY as possible, but it is advised to combine this mixin with a <a href="https://www.npmjs.com/package/clean-css">CSS minifier</a> and/or <a href="https://www.npmjs.com/package/group-css-media-queries">mixin merger</a>.</p>
+		<h2>Demos</h2>
+		<ul>
+			<li><a href="#regular">Basic usage</a></li>
+			<li><a href="#offset">Offset</a></li>
+			<li><a href="#centering">Centering</a></li>
+			<li><a href="#no-reassemble">Non-reassembling</a></li>
+			<li><a href="#push-pull">Push &amp; Pull</a></li>
+			<li><a href="#context">Context</a></li>
+			<li><a href="#reassembly-point-and-range">Reassembly Point and Range</a></li>
+			<li><a href="#layout-chaining">Layout Chaining</a></li>
+		</ul>
+		<h2>Browser support</h2>
+		<p>Chrome (40+), Safari (8+), Firefox (35+), Opera (26+)</p>
+		<p class="report is-info"><strong>Is this working in older browsers?</strong> <a href="https://github.com/flovan/ttyg-site/edit/master/templates/index.html#L9">Edit the line above</a> and send a PR.<br>
+		<strong>Is this broken in a specific browser?</strong> <a href="https://github.com/flovan/ttyg/issues">Add an issue</a> so it can be checked and fixed.</p>
+		<h2>Contributing</h2>
+		<p>TTYG opens up a lot of chaining possibilities. Below you'll find the most common use-cases, but the mixin might go haywire in complex situations. Please <a href="https://github.com/flovan/ttyg/issues">make an issue</a> if you stumble upon such an exception so it can be fixed.</p>
+		<h2>Roadmap aka TODO</h2>
+		<ul>
+			<li>Add a mixin to generate regular classes into stylesheet</li>
+			<li>Try to figure out a way to have selector-scoped settings (eg. to be able to have spaced <em>and</em> non-spaced columns in the same stylesheet)</li>
+			<li>DRY out mixin itself, and try to improve compile times</li>
+			<li>Write automated tests to varify output</li>
+			<li>Test complex scenarios</li>
+			<li>Test browser support</li>
+		</ul>
+		<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+	</header>
+	<article id="usage">
+		<div class="container">
+			<h1>Usage</h1>
+			<p>To start using TTYG, include the contents of the <code>sass</code> folder somewhere in your project and import the base file.</p>
+			<pre><code>@import 'ttyg';</code></pre>
+		</div>
+	</article>
+	<article id="configuration">
+		<div class="container">
+			<h1>Configuration</h1>
+			<p>Configure TTYG by defining the settings map <code>$ttyg</code>, preferably somewhere at the top of your main stylesheet (or before the first usage of TTYG).</p>
+			<pre><code>$ttyg(
+  // Default context to use for column widths
+  context: 12,
+
+  // Default gutter spacing between columns
+  // Set this to 0% for a no-gap layout
+  gutter: 5%,
+
+  // Default minimum reassembly point
+  reassembly: 650px,
+
+  // Default minimum width of a grid container
+  grid-width: 1140px,
+
+  // Default minimum padding on a page (when below grid-width)
+  page-padding: 4%,
+
+  // Font-size used to calculate em-based media-queries
+  font-size: 16px
+);</code></pre>
+			<p>The keys listed above are all of the available settings and their default values.</p>
+		</div>
+	</article>
+	<article>
+		<div class="container">
+			<h1>Demos</h1>
+			<div class="report is-info">
+				<p><strong>Note:</strong></p>
+				<ul>
+					<li>Vertical spacing below was added for aesthetic reasons.</li>
+					<li>All demos that include a reassembly point or range are best viewed in a resizable browser.</li>
+				</ul>
+			</div>
+		</div>
+		<section class="demo demo-1" id="regular">
+			<div class="container">
+				<h2>Basic usage</h2>
+				<p>Standard, auto-collapsing columns. Usage of <code>edge</code> signifies a column that ends a row.</p>
+				<pre><code>@include col([number]);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>12 edge</div>
+				<div>6</div>
+				<div>6 edge</div>
+				<div>4</div>
+				<div>4</div>
+				<div>4 edge</div>
+				<div>3</div>
+				<div>3</div>
+				<div>3</div>
+				<div>3 edge</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2</div>
+				<div>2 edge</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1</div>
+				<div>1 edge</div>
+			</div>
+		</section>
+		<section class="demo demo-2" id="offset">
+			<div class="container">
+				<h2>Offset</h2>
+				<p>Usage of <code>offset</code> (followed by an amount of columns) will push columns to the left.</p>
+				<pre><code>@include col([number] offset [number]);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>3</div>
+				<div>3 offset 6</div>
+				<div>2 offset 1</div>
+				<div>2 offset 4</div>
+				<div>2 offset 1</div>
+			</div>
+		</section>
+		<section class="demo demo-3" id="centering">
+			<div class="container">
+				<h2>Centering</h2>
+				<p>Good ol&#39; <code>margin: 0 auto;</code> centering.</p>
+				<pre><code>@include col([number] centered);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>4 centered</div>
+				<div>8 centered</div>
+			</div>
+		</section>
+		<section class="demo demo-4" id="no-reassemble">
+			<div class="container">
+				<h2>Non-reassembling</h2>
+				<p>Usage of <code>no-reassemble</code> will not add any <code>min-width</code> media queries and thus columns will persist on smaller screens.</p>
+				<pre><code>@include col([number] no-reassemble);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>6 no-reassemble</div>
+				<div>6 no-reassemble</div>
+				<div>4</div>
+				<div>4</div>
+				<div>4</div>
+			</div>
+		</section>
+		<section class="demo demo-5" id="push-pull">
+			<div class="container">
+				<h2>Push &amp; Pull</h2>
+				<p>Through usage of <code>push</code> and <code>pull</code> (followed by an amount of columns), column order can be flipped visually.</p>
+				<pre><code>@include col();</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>6 push 6<br><em>First in DOM</em></div>
+				<div>6 pull 6<br><em>Last in DOM</em></div>
+				<div>3<br><em>First in DOM</em></div>
+				<div>3 push 6<br><em>Middle in DOM</em></div>
+				<div>6 pull 3<br><em>Last in DOM</em></div>
+				<div>4 push 8<br><em>First in DOM</em></div>
+				<div>4<br><em>Middle in DOM</em></div>
+				<div>4 pull 8<br><em>Last in DOM</em></div>
+			</div>
+		</section>
+		<section class="demo demo-6">
+			<div class="container">
+				<h2>Context</h2>
+				<p>By using <code>of</code>, a different context can be used for calculating column widths.</p>
+				<pre><code>@include col([number] of [number]);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>3 of 5</div>
+				<div>2 of 5</div>
+			</div>
+		</section>
+		<section class="demo demo-7" id="reassembly-point-and-range">
+			<div class="container">
+				<h2>Reassembly Point and Range</h2>
+				<p>Start or end a layout on a specific point or assign it to a range by using <code>from</code> and <code>to</code> followed by a pixel value.<br>
+					The latter one of the includes below would use the <a href="#configuration">config reassembly point</a> as <code>from</code> value.</p>
+
+				<pre><code>@include col([number] from [pixel value];
+@include col([number] from [pixel value] to [pixel value]);
+@include col([number] to [pixel value]);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+					<div>6<br><em>Default: from 650px</em></div>
+					<div>6 from 500px</div>
+					<div>6 to 800px<br><em>Default: from 650px</em></div>
+					<div>6 from 800px to 1000px</div>
+			</div>
+		</section>
+		<section class="demo demo-8" id="layout-chaining">
+			<div class="container">
+				<h2>Layout Chaining</h2>
+				<p>TTYG&#39;s true strength lies in the ability to chain together behaviours, by using the keyword <code>then</code>.<br>
+				Notice how every behaviour has a specified <code>edge</code>? This value will be used for an <code>:nth-child()</code> selector in each reassembly points.</p>
+				<pre><code>@include col([layout instruction] then [layout instruction] [...]);</code></pre>
+			</div>
+			<div class="demo-wrapper">
+				<div>6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4</div>
+				<div>6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4</div>
+				<div>6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4</div>
+				<div>6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4</div>
+				<div>6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4</div>
+				<div>6 to 800px edge 2 then 4 to 900px edge 3 then 3 edge 4</div>
+			</div>
+		</section>
+	</article>
+	<article>
+		<div class="container">
+			<h1>Credits</h1>
+			<p>This mixin was developed and tested on <a href="http://sassmeister.com">Sassmeister</a>, a great tool that allows you to live-test Sass with both Libsass and Rubysass, and saves everything to a Github Gist.</p>
+			<p>A big thanks to <a href="http://hugogiraudel.com">Hugo Giraudel</a>, as well as to <a href="https://github.com/at-import">the @import team</a>. I borrowed quite a few of the helper functions they made available for this mixin!</p>
+			<p>And lastly, <a href="http://frankchimero.com/talks/the-webs-grain/transcript/"><em>The Web&#39;s Grain</em> by Frank Chimero</a> really struck a chord, which is why you&#39;ll find no mentions to the word &quot;breakpoint&quot; (oops) in the docs of mixin comments.</p>
+		</div>
+	</article>
+</main>
+
+{{> layout/footer}}

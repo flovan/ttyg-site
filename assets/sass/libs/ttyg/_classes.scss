@@ -1,0 +1,75 @@
+// PRIVATE MIXIN
+//
+
+/**
+ * Generate a margin-right with user settings
+ */
+
+@mixin ttyg-margin-r () {
+	margin-right: ttyg-get(gutter);
+}
+
+// SILENT CLASSES
+//
+
+%ttyg-is-zero-spaced {
+	font-family: NoSpace;
+}
+
+%ttyg-common {
+	position: relative;
+	width: 100%;
+}
+
+%ttyg-f-left {
+	float: left;
+}
+
+%ttyg-f-right {
+	float: right;
+}
+
+%ttyg-centered {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+%ttyg-r-auto {
+	right: auto;
+}
+
+%ttyg-l-auto {
+	left: auto;
+}
+
+%ttyg-cf:before,
+%ttyg-cf:after {
+	content: '';
+	display: table;
+}
+%ttyg-cf:after {
+	clear: both;
+}
+%ttyg-cf {
+	*zoom: 1;
+}
+
+// PUBLIC MIXINS
+//
+
+/**
+ * Configures an element to contain columns
+ */
+
+@mixin grid () {
+	@extend %ttyg-cf;
+	width: 100% - 2*ttyg-get(page-padding);
+	max-width: ttyg-get(grid-width);
+	margin: 0 auto;
+}
+
+@mixin ttyg-classes () {
+	// TODO
+	// Print classes
+}

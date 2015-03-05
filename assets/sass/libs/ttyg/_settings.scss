@@ -1,0 +1,30 @@
+// SETTINGS
+//
+
+// Version
+$ttyg-version: 0.1.0;
+
+// Prepare list with user settings
+$ttyg: () !default;
+
+// Default settings
+$ttyg-defaults: (
+	context: 12,
+	gutter: 5%,
+	reassembly: 650px,
+	grid-width: 1140px,
+	page-padding: 4%,
+	font-size: 16px
+);
+
+$ttyg-float: true;
+
+/**
+ * Get a key from the settings map
+ *
+ * @param {*} $key - the key to retreive
+ */
+
+@function ttyg-get ($key) {
+	@return map-get(map-merge($ttyg-defaults, $ttyg), $key);
+}
